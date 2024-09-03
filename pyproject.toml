@@ -1,0 +1,36 @@
+[project]
+name = "ao_arch"
+version = "0.1.2"
+requires-python = ">=3"
+dependencies = [
+    "numpy",
+]
+authors = [
+  { name = "AO Labs", email = "engineering@aolabs.ai" },
+]
+description = "architecture class (config) of ao_core by aolabs.ai"
+readme = "README.md"
+classifiers = [
+    "Private :: Do Not Upload",
+    "License :: OSI Approved :: MIT License",
+    "Development Status :: 3 - Alpha",
+    "Programming Language :: Python :: 3",
+    "Operating System :: OS Independent",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: Scientific/Engineering :: Artificial Life",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+]
+[build-system]
+requires = ["setuptools", "setuptools-scm"] # ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+packages = ["ao_arch"]
+
+[project.urls]
+"Homepage" = "https://www.aolabs.ai"
+"Bug Tracker" = "https://github.com/aolabsai/ao_arch/issues"
+
+
+# updated with https://setuptools.pypa.io/en/latest/userguide/pyproject_config.html

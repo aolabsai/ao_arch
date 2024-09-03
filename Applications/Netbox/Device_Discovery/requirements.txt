@@ -1,7 +1,0 @@
-numpy==1.23.3
-pynetbox==7.0.1
-github
-PyGithub==1.59.0
-
-
-
