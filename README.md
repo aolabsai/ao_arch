@@ -1,5 +1,9 @@
 # Welcome to  AO Labs
 
+Thank you for being here!
+
+To install the latest version of ao_core locally, run `pip install git+https://github.com/aolabsai/ao_arch` in your terminal.
+
 We're building the next layer in the AI stack, AI continuously trained to maintain itself as a referent in the learned local context, for awareness as code. We believe this is what's missing from our conception of AI today, the lack of which leads to hallucinations and the blackbox problem.
 
 At these earliest of stages our AI is at a very basic level of self-association, comparable to simplest of animals. It's not ChadGPT or anywhere near human levels, but it has qualities that LLMs and other status quo AI lack, and as a community we have a clear bottom-up path to building more cognitively complicated agents following the evolution and phylogenetics of intelligence.
