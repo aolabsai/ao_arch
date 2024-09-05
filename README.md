@@ -2,7 +2,7 @@
 
 Thank you for being here!
 
-To install the latest version of ao_core locally, run `pip install git+https://github.com/aolabsai/ao_arch` in your terminal.
+To install the latest version of ao_arch locally, run `pip install git+https://github.com/aolabsai/ao_arch` in your terminal.
 
 We're building the next layer in the AI stack, AI continuously trained to maintain itself as a referent in the learned local context, for awareness as code. We believe this is what's missing from our conception of AI today, the lack of which leads to hallucinations and the blackbox problem.
 
