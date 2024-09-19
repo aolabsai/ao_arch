@@ -239,6 +239,8 @@ class Arch(object):
             neurons_x -- int of X-dimension of grid
             neurons_y -- int of Y-dimension of grid
             Z2I_connections -- boolean, for if Z is connected to corresponding I
+
+            z_in_conn -- int of random Q-input connections for Z neurons
             """
             
             ax = int(self.connector_parameters[0])
@@ -277,10 +279,20 @@ class Arch(object):
                 neighbour_indices = nearest_points(row, col, ax, dg, size=(neurons_x, neurons_y))
                 input_con = (sorted(self.I[ch]) if Z2I_connections else [])+ sorted(self.Q[ch])
                 neigh_con = sorted(Channel)
-                for index in neighbour_indices:
-                    temp_ch = int(( (neurons_x)*index[0] ) + index[1])    
-                    input_con = input_con + (sorted(self.I[temp_ch]) if Z2I_connections else []) + sorted(self.Q[temp_ch])
-                    neigh_con = neigh_con + sorted(self.Z[temp_ch])
+                
+                if len(self.Z) != len(self.Q):
+                    if self.connector_parameters[5]: #if random is true 
+                        z_in_conn = self.connector_parameters[6]
+                        input_con = sorted(rn.sample(list(self.Q__flat), z_in_conn))
+
+                    else:  #if random is not true, perform full connection
+                        input_con = (sorted(self.I__flat) if Z2I_connections else [])+ sorted(self.Q__flat)
+
+                else:    
+                    for index in neighbour_indices:
+                        temp_ch = int(( (neurons_x)*index[0] ) + index[1])    
+                        input_con = input_con + (sorted(self.I[temp_ch]) if Z2I_connections else []) + sorted(self.Q[temp_ch])
+                        neigh_con = neigh_con + sorted(self.Z[temp_ch])
 
                 for n in Channel:
                     self.datamatrix[1, n] = sorted(input_con)
