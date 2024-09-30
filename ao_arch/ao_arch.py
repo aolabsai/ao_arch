@@ -145,7 +145,7 @@ class Arch(object):
                 self.datamatrix_type = 'full_conn'
     
     
-        if self.connector_function == "forward_full_conn":    
+        elif self.connector_function == "forward_full_conn":    
             """Fully connect the neurons input-wise-- Q channel to *all* I and itself; Z channel to all Q and itself"""
         
             for Channel in self.Q:
@@ -169,7 +169,7 @@ class Arch(object):
                 self.datamatrix_type = 'forward_full_conn'
     
     
-        if self.connector_function == "forward_forward_conn":    
+        elif self.connector_function == "forward_forward_conn":    
             """Fully connect the neurons forward only-- Q channel to *corresponding* I and itself; Z channel to all Q and itself"""
         
             ci = 0
@@ -195,7 +195,7 @@ class Arch(object):
                 self.datamatrix_type = 'forward_forward_conn'
     
     
-        if self.connector_function == "rand_conn":
+        elif self.connector_function == "rand_conn":
             """Connect neurons randomly (choose how many random connections per neuron set).
         
             Keyword arguments:
@@ -230,7 +230,7 @@ class Arch(object):
             self.datamatrix_type = "rand_conn "+str(q_in_conn)+"-"+str(q_ne_conn)+"--"+str(z_in_conn)+"-"+str(z_ne_conn)
             
 
-        if self.connector_function == "nearest_neighbour_conn":    
+        elif self.connector_function == "nearest_neighbour_conn":    
             """Connects channels of neurons in a grid to their nearest neighbors (channels)-- choose how far the connections go along both axis (ax) and along diagonals (dg).
             
             Keyword arguments:
@@ -310,3 +310,5 @@ class Arch(object):
                     self.datamatrix[3, n] = sorted(self.Q__flat) + sorted(self.Z__flat)
                     
                 self.datamatrix_type = 'nearest_neighbour_conn'
+        else:
+            raise ValueError("invalid connector function")
