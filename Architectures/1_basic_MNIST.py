@@ -30,7 +30,7 @@ connector_parameters = [360, 180, 784, 4]
 # so all Q neurons are connected randomly to 360 I and 180 neighbor Q
 #and all Z neurons are connected randomly to 784 Q and 4 (or all) neighbor Z
 
-# To maintain compatability with our API, do not change the variable name "Arch" or the constructor class "ao.Arch" in the line below (the API is pre-loaded with a version of the Arch class in this repo's main branch, hence "ao.Arch")
-Arch = ao.Arch(arch_i, arch_z, arch_c, connector_function, connector_parameters, description)
+# To maintain compatibility with our API, do not change the variable name "Arch" or the constructor class "ar.Arch" in the line below
+Arch = ar.Arch(arch_i, arch_z, arch_c, connector_function, connector_parameters, description)
 
 # varying these architecture details has been explored in this WIP aolabs research paper: https://docs.google.com/document/d/1p3FvYYPsD9XunJg2Dfaw0wLvnxIUspPsMvBi8acp0EI/edit

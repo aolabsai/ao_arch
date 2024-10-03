@@ -28,5 +28,5 @@ arch_c = []           # adding 1 control neuron which we'll define with the inst
 connector_function = "nearest_neighbour_conn"
 connector_parameters = [1, 1, 3, 3, False]
 
-# To maintain compatability with our API, do not change the variable name "Arch" or the constructor class "ao.Arch" in the line below (the API is pre-loaded with a version of the Arch class in this repo's main branch, hence "ao.Arch")
-Grid_Arch = ao.Arch(arch_i, arch_z, arch_c, connector_function, connector_parameters, description)
+# To maintain compatibility with our API, do not change the variable name "Arch" or the constructor class "ar.Arch" in the line below
+Arch = ar.Arch(arch_i, arch_z, arch_c, connector_function, connector_parameters, description)

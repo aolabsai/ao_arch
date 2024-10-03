@@ -27,6 +27,6 @@ connector_function = "forward_full_conn"
 # device mfg, type, and site are stored as strings (names) with associated unique IDs
 # using 10 binary neurons to encode integer IDs means we can encode up to 2^10 = 1048 unique binary values.
 
-# To maintain compatability with our API, do not change the variable name "Arch" or the constructor class "ao.Arch" in the line below (the API is pre-loaded with a version of the Arch class in this repo's main branch, hence "ao.Arch")
-Arch = ao.Arch(arch_i, arch_z, arch_c, connector_function, description)
+# To maintain compatibility with our API, do not change the variable name "Arch" or the constructor class "ar.Arch" in the line below
+Arch = ar.Arch(arch_i, arch_z, arch_c, connector_function, description)
 

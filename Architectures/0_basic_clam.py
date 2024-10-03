@@ -23,8 +23,8 @@ arch_z = [1]           # corresponding to Open=1/Close=0
 arch_c = [1]           # adding 1 control neuron which we'll define with the instinct control function below
 connector_function = "full_conn"
 
-# To maintain compatability with our API, do not change the variable name "Arch" or the constructor class "ao.Arch" in the line below (the API is pre-loaded with a version of the Arch class in this repo's main branch, hence "ao.Arch")
-Arch = ao.Arch(arch_i, arch_z, arch_c, connector_function, description)
+# To maintain compatibility with our API, do not change the variable name "Arch" or the constructor class "ar.Arch" in the line below
+Arch = ar.Arch(arch_i, arch_z, arch_c, connector_function, description)
 
 # Adding Instinct Control Neuron
 def c0_instinct_rule(INPUT, Agent):
