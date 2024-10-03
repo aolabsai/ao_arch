@@ -10,12 +10,12 @@ Thank you for your curiosity!
 ## // About :: https://docs.aolabs.ai/docs/arch
 #
 # This class defines the Agent ARCHitecture logic used to configure Agents, comprised of 2 components: 
-#    1) how many binary neurons to encode your input-output assocations (required),
+#    1) how many binary neurons to encode your input-output associations (required),
 #    2) How those neurons are connected (optional, more advanced-- best to start with the default of fully-connected network of neurons and them trim down)
 #
 # There are currently 3 archs you can use as reference designs for your own configuration-- a basic clam, an MNIST classifier, and a NetBox device discovery classifier (find them in the root directory of this repo).
 #
-# For an interactive visual representation of Archs to help design your own, visit: https://miro.com/app/board/uXjVM_kESvI=/?share_link_id=72701488535
+# For an interactive visual representation of archs to help design your own, visit: https://miro.com/app/board/uXjVM_kESvI=/?share_link_id=72701488535
 #
 # We eagerly welcome contributors who relate to these ideas. :)
 #
@@ -54,8 +54,8 @@ class Arch(object):
         self.sets = [self.i, self.q, self.z, self.c]
         self.sets_labels = ["I", "Q", "Z", "C"]
         # I - Input neurons: 0 or 1 depending on fixed ENV decoding
-        # Q - State or interneurons: 0 or 1 depending on learned lookup tabled comproised of connected neurons
-        # Z - Output neurons: also learning binary neurons like Q, except Z actuates Agent in enviroment
+        # Q - State or interneurons: 0 or 1 depending on learned lookup tabled comprised of connected neurons
+        # Z - Output neurons: also learning binary neurons like Q, except Z actuates Agent in environment
         # C - Control neurons: 0 or 1 depending on designer defined label or trigger like instincts to activate learning
 
         # Creating nids in Channels in Sets
@@ -88,7 +88,7 @@ class Arch(object):
         self.C__flat_pleasure= np.array([self.C[0][0], self.C[0][1]])
         self.C__flat_pain    = np.array([self.C[0][2]])
         
-        # Defining Neuron metadata -- the connections of neurons (i.e. which neurons consititue each others' lookup tables)
+        # Defining Neuron metadata -- the connections of neurons (i.e. which neurons constitute each others' lookup tables)
         self.datamatrix = np.zeros([5, self.n_total], dtype="O")
         # 5 rows, as follows:
             #0 Type
