@@ -100,7 +100,7 @@ def rectangle_points(row, col, x, y, size=(30, 30)):
     # Boundaries for the grid
     max_row, max_col = size
 
-    # Calculatingthe boundaries considering the size limits
+    # Calculating the boundaries considering the size limits
     top_row = max(0, row - y)
     left_col = max(0, col - x)
 

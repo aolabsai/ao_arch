@@ -239,7 +239,7 @@ class Arch(object):
             neurons_x -- int of X-dimension of grid
             neurons_y -- int of Y-dimension of grid
             Z2I_connections -- boolean, for if Z is connected to corresponding I
-            z_in_conn -- int of random Q-input connections for Z neurons (optional, provide if Z and Q has different size)
+            z_in_conn -- int of random Q-input connections for Z neurons (optional, provide if Z and Q have different sizes)
             """
             
             ax = int(self.connector_parameters[0])
@@ -317,11 +317,11 @@ class Arch(object):
             
             Keyword arguments:
             x -- int, represents the number of units along one side of the x-axis (total rectangle width will be 2x).
-            y -- int, represents the number of units along one side of the y-axis (total rectangle heigth will be 2y).
+            y -- int, represents the number of units along one side of the y-axis (total rectangle height will be 2y).
             neurons_x -- int of X-dimension of grid
             neurons_y -- int of Y-dimension of grid
             Z2I_connections -- boolean, for if Z is connected to corresponding I
-            z_in_conn -- int of random Q-input connections for Z neurons (optional, provide if Z and Q has different size)
+            z_in_conn -- int of random Q-input connections for Z neurons (optional, provide if Z and Q have different sizes)
             """
             
             x = int(self.connector_parameters[0])
