@@ -197,12 +197,12 @@ paths:
                   agent_id: 1st of Clams
                   INPUT: "000"
                   LABEL: "0"
-                  STATES: 1
                   INSTINCTS: true
                   control:
                     CN: false
                     CP: false
                     US: true
+                    STATES: 1
                     neuron:
                       DD: true
                       Hamming: true
@@ -213,12 +213,12 @@ paths:
                   agent_id: 1st NB DD
                   INPUT: "000000001100000001110000001010"
                   LABEL: "0000000100"
-                  STATES: 1
                   INSTINCTS: false
                   control:
                     CN: false
                     CP: false
                     US: true
+                    STATES: 1
                     neuron:
                       DD: true
                       Hamming: true
@@ -368,9 +368,6 @@ components:
           description: "OPTIONAL-- binary LABEL to Agent; if provided, Agent output\
             \ will match LABEL and it will learn that input<>output mapping; number\
             \ of binary digits is specified by Agent Arch Z neurons"
-        STATES:
-          type: integer
-          description: number of times an Agent moves to the next state
         INSTINCTS:
           type: boolean
           description: OPTIONAL-- activates learning by instinct triggers specified
@@ -389,6 +386,9 @@ components:
               description: "Agents learn sequenced info by default, so set as True\
                 \ if data stream is UnSequenced and needs a reset state between each\
                 \ data input"
+            STATES:
+              type: integer
+              description: number of times an Agent moves to the next state
             neuron:
               type: object
               properties:
