@@ -197,7 +197,7 @@ paths:
                   agent_id: 1st of Clams
                   INPUT: "000"
                   LABEL: "0"
-                  SIZE: 1
+                  STATES: 1
                   INSTINCTS: true
                   control:
                     CN: false
@@ -213,7 +213,7 @@ paths:
                   agent_id: 1st NB DD
                   INPUT: "000000001100000001110000001010"
                   LABEL: "0000000100"
-                  SIZE: 1
+                  STATES: 1
                   INSTINCTS: false
                   control:
                     CN: false
@@ -368,9 +368,9 @@ components:
           description: "OPTIONAL-- binary LABEL to Agent; if provided, Agent output\
             \ will match LABEL and it will learn that input<>output mapping; number\
             \ of binary digits is specified by Agent Arch Z neurons"
-        SIZE:
+        STATES:
           type: integer
-          description: perform reset state given number of times.
+          description: number of times an Agent moves to the next state
         INSTINCTS:
           type: boolean
           description: OPTIONAL-- activates learning by instinct triggers specified
