@@ -202,6 +202,7 @@ paths:
                     CN: false
                     CP: false
                     US: true
+                    STATES: 1
                     neuron:
                       DD: true
                       Hamming: true
@@ -217,6 +218,7 @@ paths:
                     CN: false
                     CP: false
                     US: true
+                    STATES: 1
                     neuron:
                       DD: true
                       Hamming: true
@@ -384,6 +386,9 @@ components:
               description: "Agents learn sequenced info by default, so set as True\
                 \ if data stream is UnSequenced and needs a reset state between each\
                 \ data input"
+            STATES:
+              type: integer
+              description: number of times an Agent moves to the next state
             neuron:
               type: object
               properties:
