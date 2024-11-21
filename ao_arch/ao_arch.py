@@ -35,7 +35,7 @@ import random as rn
 # 3rd party
 import numpy as np
 # Arch class
-from .functions import nearest_points
+from .functions import nearest_points, rectangle_points
 
 
 class Arch(object):
@@ -239,8 +239,7 @@ class Arch(object):
             neurons_x -- int of X-dimension of grid
             neurons_y -- int of Y-dimension of grid
             Z2I_connections -- boolean, for if Z is connected to corresponding I
-
-            z_in_conn -- int of random Q-input connections for Z neurons
+            z_in_conn -- int of random Q-input connections for Z neurons (optional, provide if Z and Q have different sizes)
             """
             
             ax = int(self.connector_parameters[0])
@@ -282,7 +281,7 @@ class Arch(object):
                 
                 if len(self.Z) != len(self.Q):
                     if self.connector_parameters[5]: #if random is true 
-                        z_in_conn = self.connector_parameters[6]
+                        z_in_conn = self.connector_parameters[5]
                         input_con = sorted(rn.sample(list(self.Q__flat), z_in_conn))
 
                     else:  #if random is not true, perform full connection
@@ -310,5 +309,87 @@ class Arch(object):
                     self.datamatrix[3, n] = sorted(self.Q__flat) + sorted(self.Z__flat)
                     
                 self.datamatrix_type = 'nearest_neighbour_conn'
+        
+        
+
+        elif self.connector_function == "rectangular_conn":    
+            """Connects channels of neurons in a grid to their nearest neighbors (channels)-- choose how far the connections go along both axis (ax) and along diagonals (dg).
+            
+            Keyword arguments:
+            x -- int, represents the number of units along one side of the x-axis (total rectangle width will be 2x).
+            y -- int, represents the number of units along one side of the y-axis (total rectangle height will be 2y).
+            neurons_x -- int of X-dimension of grid
+            neurons_y -- int of Y-dimension of grid
+            Z2I_connections -- boolean, for if Z is connected to corresponding I
+            z_in_conn -- int of random Q-input connections for Z neurons (optional, provide if Z and Q have different sizes)
+            """
+            
+            x = int(self.connector_parameters[0])
+            y = int(self.connector_parameters[1])
+            neurons_x = int(self.connector_parameters[2])
+            neurons_y = int(self.connector_parameters[3])
+            Z2I_connections = self.connector_parameters[4]  #True or False
+
+            ch = 0
+            row = 0
+            col = 0
+            for Channel in self.Q:
+                neighbour_indices = rectangle_points(row, col, x, y, size=(neurons_x, neurons_y))
+                input_con = sorted(self.I[ch])
+                neigh_con = sorted(Channel)
+                for index in neighbour_indices:
+                    temp_ch = int(( (neurons_x)*index[0] ) + index[1]) 
+                    input_con = input_con + sorted(self.I[temp_ch])
+                    neigh_con = neigh_con + sorted(self.Q[temp_ch])
+
+                for n in Channel:
+                    self.datamatrix[1, n] = sorted(input_con)
+                    self.datamatrix[2, n] = sorted(neigh_con)
+                    self.datamatrix[3, n] = sorted(self.C__flat)
+                    self.datamatrix[4, n] = n - sum(self.q)
+                ch += 1
+                col += 1 
+                if ch%(neurons_x) == 0:
+                    row += 1
+                    col = 0
+
+            ch = 0
+            row = 0
+            col = 0
+            for Channel in self.Z:
+                neighbour_indices = rectangle_points(row, col, x, y, size=(neurons_x, neurons_y))
+                input_con = (sorted(self.I[ch]) if Z2I_connections else [])+ sorted(self.Q[ch])
+                neigh_con = sorted(Channel)
+                
+                if len(self.Z) != len(self.Q):
+                    if self.connector_parameters[5]: #if random is true 
+                        z_in_conn = self.connector_parameters[5]
+                        input_con = sorted(rn.sample(list(self.Q__flat), z_in_conn))
+
+                    else:  #if random is not true, perform full connection
+                        input_con = (sorted(self.I__flat) if Z2I_connections else [])+ sorted(self.Q__flat)
+
+                else:    
+                    for index in neighbour_indices:
+                        temp_ch = int(( (neurons_x)*index[0] ) + index[1])    
+                        input_con = input_con + (sorted(self.I[temp_ch]) if Z2I_connections else []) + sorted(self.Q[temp_ch])
+                        neigh_con = neigh_con + sorted(self.Z[temp_ch])
+
+                for n in Channel:
+                    self.datamatrix[1, n] = sorted(input_con)
+                    self.datamatrix[2, n] = sorted(neigh_con)
+                    self.datamatrix[3, n] = sorted(self.C__flat)
+                    self.datamatrix[4, n] = n - sum(self.q)
+                ch += 1
+                col += 1 
+                if ch%(neurons_x) == 0:
+                    row += 1
+                    col = 0
+                
+            for Channel in self.C:
+                for n in Channel:
+                    self.datamatrix[3, n] = sorted(self.Q__flat) + sorted(self.Z__flat)
+                    
+                self.datamatrix_type = 'rectangular_conn'
         else:
             raise ValueError("invalid connector function")

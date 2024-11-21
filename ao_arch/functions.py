@@ -94,3 +94,24 @@ def nearest_points(row, col, ax, dg, size = (30,30)):
             temp_col += 1
 
     return points
+
+
+def rectangle_points(row, col, x, y, size=(30, 30)):
+    # Boundaries for the grid
+    max_row, max_col = size
+
+    # Calculating the boundaries considering the size limits
+    top_row = max(0, row - y)
+    left_col = max(0, col - x)
+
+    bottom_row = min(max_row - 1, row + y)
+    right_col = min(max_col - 1, col + x)
+
+  
+    # Collecting all coordinates inside the rectangle
+    points = []
+    for r in range(top_row, bottom_row + 1):
+        for c in range(left_col, right_col + 1):
+            points.append((r, c))
+    
+    return points
