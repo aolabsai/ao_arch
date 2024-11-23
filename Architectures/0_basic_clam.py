@@ -35,3 +35,31 @@ def c0_instinct_rule(INPUT, Agent):
     return instinct_response            
 # Saving the function to the Arch so the Agent can access it
 Arch.datamatrix[4, Arch.C[1][0]] = c0_instinct_rule
+
+
+# Adding Aux Action
+def qa0_firing_rule(Agent):
+    
+    if not hasattr(Agent, 'counter'):
+        Agent.__setattr__("counter", Agent.state)
+
+    if Agent.counter + 10 == Agent.state:
+        Agent.story[Agent.state, Agent.arch.C__flat[4]] = 1
+        Agent.metastory[Agent.state, Agent.arch.C__flat[4]] = "Fired according to aux"
+    else:
+        Agent.counter = Agent.state
+        print("aux counter reset at:" + str(Agent.counter))
+
+        Agent.counter = 0
+
+        group_response = []
+                
+
+
+    if INPUT[0] == 1    and    Agent.story[ Agent.state-1,  Agent.arch.Z__flat[0]] == 1 :        # self.Z__flat[0] needs to be adjusted as per the agent, which output the designer wants the agent to repeat while learning postively or negatively
+        instinct_response = [1, "c0 instinct triggered"]
+    else:
+        instinct_response = [0, "c0 pass"]    
+    return instinct_response            
+# Saving the function to the Arch so the Agent can access it
+Arch.datamatrix[4, Arch.C[1][0]] = c0_instinct_rule
