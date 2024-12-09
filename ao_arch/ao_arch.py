@@ -116,7 +116,7 @@ class Arch(object):
 
         # Defining Auxiliary Neuron metadata -- # for inner, non-learning neurons that respond to user-defined functions 
                                                 # such as to simulate hunger and energy counters
-        aux_groups = len(self.arch_qa)
+        aux_groups = len(self.qa)
         self.datamatrix_aux = np.zeros([3, aux_groups], dtype="O")
         # unlike main datamatrix which has columns as number of neurons, in aux datamatrix columns are number of groups
         # with 3 rows as follows:
@@ -124,12 +124,18 @@ class Arch(object):
             #1 nids - neural IDs
             #2 Firing Function
 
-        g = 0
-        for qa_group in self.qa:
-            self.arch.datamatrix_aux[0, g] = "" # placeholder in anticipation of multiple aux types
-            self.arch.datamatrix_aux[1, g] = qa_group
-            self.arch.datamatrix_aux[2, g] = "" # placeholder for function
-            g += 1
+        if aux_groups == 1:
+                self.datamatrix_aux[0] = "" # placeholder in anticipation of multiple aux types
+                self.datamatrix_aux[1] = self.Qa
+                self.datamatrix_aux[2] = "" # placeholder for function
+
+        else:
+            g = 0
+            for qa_group in self.qa:
+                self.datamatrix_aux[0, g] = "" # placeholder in anticipation of multiple aux types
+                self.datamatrix_aux[1, g] = self.Qa[g]
+                self.datamatrix_aux[2, g] = "" # placeholder for function
+                g += 1
 
         # connection aux neurons to all QZ neurons
         if qa_conn == "full":
