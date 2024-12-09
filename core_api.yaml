@@ -16,10 +16,8 @@ externalDocs:
   description: Docs & Guides
   url: https://docs.aolabs.ai/
 servers:
-- url: https://api.aolabs.ai/v0dev
-  description: "aolabs on AWS v0dev"
-- url: https://virtserver.swaggerhub.com/aolabs/ao_core/0.1.0
-  description: SwaggerHub API Auto Mocking
+- url: https://api.aolabs.ai/prod
+  description: "aolabs on AWS, production endpoint"
 security:
 - AWSapiKey: []
 tags:
@@ -102,13 +100,13 @@ paths:
               Basic Clam Kennel:
                 value:
                   kennel_name: TEST-Clamologist
-                  arch_URL: https://raw.githubusercontent.com/aolabsai/ao_arch/refs/heads/main/Architectures/0_basic_clam.py
+                  arch_URL: https://gist.githubusercontent.com/mi3law/8012fc6e6adceab35d03fd3e5da8db34/raw/58df93994f5341541809547a1d963e8ed0570a07/0_basic_clam.py
                   description: "the simplest, atomic arch reference design, our hello, world"
                   permissions: free and open as the sea!
               Netbox Device Discovery:
                 value:
                   kennel_name: TEST-NetBox_DeviceDiscovery
-                  arch_URL: https://raw.githubusercontent.com/aolabsai/ao_arch/refs/heads/main/Architectures/2_netbox-device_discovery.py
+                  arch_URL: https://gist.githubusercontent.com/mi3law/ed9f4f358a0f5e3bd44011afeaa8e00d/raw/463b1529ec6c06d5c41b2eb82ebf21c71c9871b0/2_netbox-device_discovery.py
                   description: "a 30-10-neuron Agent that predicts roles of devices on NetBox, eg. https://demo.netbox.dev/dcim/devices/"
                   permissions: open
         required: true
@@ -335,7 +333,7 @@ components:
           description: "name your collection of Agents, possible after their/your application"
         arch_URL:
           type: string
-          description: link to an arch file via a github raw URL
+          description: link to a raw URL arch file hosted on gists.github.com
         description:
           type: string
         permissions:
