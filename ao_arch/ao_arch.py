@@ -204,6 +204,8 @@ class Arch(object):
             z_in_conn -- int of random Q-input connections for Z neurons
             z_ne_conn -- int of random Z-neighbor connections for Z neurons
             """    
+            if len(connector_parameters) != 4:
+                raise ValueError(f"expected 'connector_parameters' of length 4, got length {len(connector_parameters)}")
             q_in_conn = self.connector_parameters[0]
             q_ne_conn = self.connector_parameters[1]
             z_in_conn = self.connector_parameters[2]
