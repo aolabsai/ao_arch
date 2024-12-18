@@ -206,6 +206,10 @@ class Arch(object):
             """    
             if len(connector_parameters) != 4:
                 raise ValueError(f"expected 'connector_parameters' of length 4, got length {len(connector_parameters)}")
+            if not all(isinstance(x, int) for x in connector_parameters):
+                raise TypeError(f"expected 'connector_parameters' of type 'int'")
+
+
             q_in_conn = self.connector_parameters[0]
             q_ne_conn = self.connector_parameters[1]
             z_in_conn = self.connector_parameters[2]
@@ -244,6 +248,15 @@ class Arch(object):
             z_in_conn -- int of random Q-input connections for Z neurons (optional, provide if Z and Q have different sizes)
             """
             
+            if len(connector_parameters) < 5 or len(connector_parameters) > 6:
+                raise ValueError(f"expected 'connector_parameters' of length 5 or 6, got length {len(connector_parameters)}")
+            if arch_i != arch_z:
+                raise ValueError(f"expected 6th parameter in 'connector_parameters' when arch_i != arch_z")
+            # type check params
+            if not all(isinstance(x, int) for x in connector_parameters):
+                raise TypeError(f"expected 'connector_parameters' of type 'int'")
+
+
             ax = int(self.connector_parameters[0])
             dg = int(self.connector_parameters[1])
             neurons_x = int(self.connector_parameters[2])
@@ -326,6 +339,13 @@ class Arch(object):
             z_in_conn -- int of random Q-input connections for Z neurons (optional, provide if Z and Q have different sizes)
             """
             
+            if len(connector_parameters) < 5 or len(connector_parameters) > 6:
+                raise ValueError(f"expected 'connector_parameters' of length 5 or 6, got length {len(connector_parameters)}")
+            if arch_i != arch_z:
+                raise ValueError(f"expected 6th parameter in 'connector_parameters' when arch_i != arch_z")
+            if not all(isinstance(x, int) for x in connector_parameters):
+                raise TypeError(f"expected 'connector_parameters' of type 'int'")
+
             x = int(self.connector_parameters[0])
             y = int(self.connector_parameters[1])
             neurons_x = int(self.connector_parameters[2])
