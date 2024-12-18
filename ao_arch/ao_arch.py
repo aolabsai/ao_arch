@@ -250,10 +250,12 @@ class Arch(object):
             
             if len(connector_parameters) < 5 or len(connector_parameters) > 6:
                 raise ValueError(f"expected 'connector_parameters' of length 5 or 6, got length {len(connector_parameters)}")
-            if arch_i != arch_z:
+            if arch_i != arch_z and len(connector_parameters) < 6:
                 raise ValueError(f"expected 6th parameter in 'connector_parameters' when arch_i != arch_z")
             # type check params
-            if not all(isinstance(x, int) for x in connector_parameters):
+            if ((not all(isinstance(x, int) for x in connector_parameters[:4])) and
+                (not isinstance(connector_parameters[4], bool)) and
+                ((len(connector_parameters) < 6) or (not isinstance(connector_parameters[5], int)))):
                 raise TypeError(f"expected 'connector_parameters' of type 'int'")
 
 
@@ -262,6 +264,9 @@ class Arch(object):
             neurons_x = int(self.connector_parameters[2])
             neurons_y = int(self.connector_parameters[3])
             Z2I_connections = self.connector_parameters[4]  #True or False
+
+            if neurons_x * neurons_y != len(arch_i):
+                raise ValueError(f"Expected 'neurons_x*neurons_y' to equal the {len(arch_i)}")
 
             ch = 0
             row = 0
@@ -341,16 +346,21 @@ class Arch(object):
             
             if len(connector_parameters) < 5 or len(connector_parameters) > 6:
                 raise ValueError(f"expected 'connector_parameters' of length 5 or 6, got length {len(connector_parameters)}")
-            if arch_i != arch_z:
+            if arch_i != arch_z and len(connector_parameters) < 6:
                 raise ValueError(f"expected 6th parameter in 'connector_parameters' when arch_i != arch_z")
-            if not all(isinstance(x, int) for x in connector_parameters):
-                raise TypeError(f"expected 'connector_parameters' of type 'int'")
+            if ((not all(isinstance(x, int) for x in connector_parameters[:4])) and
+                (not isinstance(connector_parameters[4], bool)) and
+                ((len(connector_parameters) < 6) or (not isinstance(connector_parameters[5], int)))):
+                raise TypeError(f"invalid type(s) in 'connector_parameters'")
 
             x = int(self.connector_parameters[0])
             y = int(self.connector_parameters[1])
             neurons_x = int(self.connector_parameters[2])
             neurons_y = int(self.connector_parameters[3])
             Z2I_connections = self.connector_parameters[4]  #True or False
+
+            if neurons_x * neurons_y != len(arch_i):
+                raise ValueError(f"Expected 'neurons_x*neurons_y' to equal the {len(arch_i)}")
 
             ch = 0
             row = 0
