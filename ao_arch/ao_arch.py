@@ -264,6 +264,10 @@ class Arch(object):
             neurons_x = int(self.connector_parameters[2])
             neurons_y = int(self.connector_parameters[3])
             Z2I_connections = self.connector_parameters[4]  #True or False
+            if len(connector_parameters) == 6:
+                z_random = self.connector_parameters[5] #integer
+            else:
+                z_random = False
 
             if neurons_x * neurons_y != len(arch_i):
                 raise ValueError(f"Expected 'neurons_x*neurons_y' to equal the {len(arch_i)}")
@@ -300,8 +304,8 @@ class Arch(object):
                 neigh_con = sorted(Channel)
                 
                 if len(self.Z) != len(self.Q):
-                    if self.connector_parameters[5]: #if random is true 
-                        z_in_conn = self.connector_parameters[5]
+                    if z_random: #if random is true 
+                        z_in_conn = z_random
                         input_con = sorted(rn.sample(list(self.Q__flat), z_in_conn))
 
                     else:  #if random is not true, perform full connection
@@ -358,6 +362,10 @@ class Arch(object):
             neurons_x = int(self.connector_parameters[2])
             neurons_y = int(self.connector_parameters[3])
             Z2I_connections = self.connector_parameters[4]  #True or False
+            if len(connector_parameters) == 6:
+                z_random = self.connector_parameters[5] #integer
+            else:
+                z_random = False
 
             if neurons_x * neurons_y != len(arch_i):
                 raise ValueError(f"Expected 'neurons_x*neurons_y' to equal the {len(arch_i)}")
@@ -394,8 +402,8 @@ class Arch(object):
                 neigh_con = sorted(Channel)
                 
                 if len(self.Z) != len(self.Q):
-                    if self.connector_parameters[5]: #if random is true 
-                        z_in_conn = self.connector_parameters[5]
+                    if z_random: #if random is true 
+                        z_in_conn = z_random
                         input_con = sorted(rn.sample(list(self.Q__flat), z_in_conn))
 
                     else:  #if random is not true, perform full connection
