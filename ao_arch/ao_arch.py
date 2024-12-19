@@ -264,10 +264,9 @@ class Arch(object):
             neurons_x = int(self.connector_parameters[2])
             neurons_y = int(self.connector_parameters[3])
             Z2I_connections = self.connector_parameters[4]  #True or False
+            z_random = False
             if len(connector_parameters) == 6:
                 z_random = self.connector_parameters[5] #integer
-            else:
-                z_random = False
 
             if neurons_x * neurons_y != len(arch_i):
                 raise ValueError(f"Expected 'neurons_x*neurons_y' to equal the {len(arch_i)}")
@@ -362,10 +361,9 @@ class Arch(object):
             neurons_x = int(self.connector_parameters[2])
             neurons_y = int(self.connector_parameters[3])
             Z2I_connections = self.connector_parameters[4]  #True or False
+            z_random = False
             if len(connector_parameters) == 6:
                 z_random = self.connector_parameters[5] #integer
-            else:
-                z_random = False
 
             if neurons_x * neurons_y != len(arch_i):
                 raise ValueError(f"Expected 'neurons_x*neurons_y' to equal the {len(arch_i)}")
