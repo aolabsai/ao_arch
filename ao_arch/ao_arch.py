@@ -145,6 +145,8 @@ class Arch(object):
             for Channel in self.Z:
                 for n in Channel:
                     self.datamatrix[1, n] = sorted(self.Qa__flat)
+        elif qa_conn == "none":
+            pass
 
 
     ## Neural Connector functions follow
