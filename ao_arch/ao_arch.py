@@ -42,7 +42,7 @@ class Arch(object):
     """Arch constructor class."""
     def __init__(self, arch_i, arch_z, arch_c=[], 
                  connector_function="full_conn",  connector_parameters=(),
-                 arch_qa=[], qa_conn="full",
+                 arch_qa=[], qa_conn="full_conn",
                  description=""):
         super(Arch, self).__init__()
         self.i = arch_i
@@ -436,7 +436,7 @@ class Arch(object):
 
 
         # connecting Qaux neurons to all QZ neurons
-        if self.qa_conn == "full" and self.qa != [] :
+        if self.qa_conn == "full_conn" and self.qa != [] :
             for Channel in self.Q:
                 for n in Channel:
                     self.datamatrix[1, n] += sorted(self.Qa__flat)

@@ -25,7 +25,7 @@ connector_function = "full_conn"
 connector_parameters=()
 
 arch_qa = [10]
-qa_conn = "full"
+qa_conn = "full_conn"
 
 # To maintain compatibility with our API, do not change the variable name "Arch" or the constructor class "ar.Arch" in the line below
 Arch = ar.Arch(arch_i, arch_z, arch_c, connector_function, connector_parameters, arch_qa, qa_conn, description)
