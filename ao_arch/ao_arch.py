@@ -49,21 +49,28 @@ class Arch(object):
         self.q = self.i.copy()
         self.z = arch_z
         self.c = [3]+arch_c
-        self.qa = arch_qa
         self.connector_function = connector_function
         self.connector_parameters = connector_parameters
+
+        self.qa = arch_qa
+        self.qa_conn = qa_conn
+
         self.description = description
 
         # Neuron Sets
-        self.sets = [self.i, self.q, self.z, self.c, self.qa]
-        self.sets_labels = ["I", "Q", "Z", "C", "Qa"]
+        self.sets = [self.i, self.q, self.z, self.c]
+        self.sets_labels = ["I", "Q", "Z", "C"]
+        if self.qa != []: 
+            self.sets += [self.qa]   
+            self.sets_labels += ["Qa"]
         # I - Input neurons: 0 or 1 depending on fixed ENV decoding
         # Q - State or interneurons: 0 or 1 depending on learned lookup tabled comprised of connected neurons
         # Z - Output neurons: also learning binary neurons like Q, except Z actuates Agent in environment
         # C - Control neurons: 0 or 1 depending on designer defined label or trigger like instincts to activate learning
+        # Qa - Auxiliary interneurons: 0 or 1 depending on user-defined function, most simple us is as a step time counter
 
         # Creating nids in Channels in Sets
-        si = 0     # sets, i.e. category of neurons corresponding to major type, i.g. I or Z or C
+        si = 0     # sets, i.e. category of neurons corresponding to major type, i.g. I or Z or C (and Qa if specified)
         neuron_counter = 0
         for s in self.sets:
             
@@ -83,7 +90,10 @@ class Arch(object):
             si += 1
     
         self.n_total = sum(self.i + self.q + self.z + self.c)
-        self.n_all   = sum(self.i + self.q + self.z + self.c + self.qa)
+        if self.qa != []:
+            self.n_all = sum(self.i + self.q + self.z + self.c + self.qa)
+        else:
+            self.n_all = self.n_total
 
         self.IQZC = np.concatenate((self.I__flat, self.Q__flat, self.Z__flat, self.C__flat))
         self.IQZ  = np.concatenate((self.I__flat, self.Q__flat, self.Z__flat))
@@ -113,40 +123,29 @@ class Arch(object):
         self.datamatrix[4, self.C[0][1]] = "C+ pleasure signal"
         self.datamatrix[4, self.C[0][2]] = "C- pain signal"
 
+        if self.qa != []:
+            # Defining Auxiliary Neuron metadata -- # for inner, non-learning neurons that respond to user-defined functions 
+                                                    # such as to simulate hunger and energy counters
+            aux_groups = len(self.qa)
+            self.datamatrix_aux = np.zeros([3, aux_groups], dtype="O")
+            # unlike main datamatrix which has columns as number of neurons, in aux datamatrix columns are number of groups
+            # with 3 rows as follows:
+                #0 Type
+                #1 nids - neural IDs
+                #2 Firing Function
 
-        # Defining Auxiliary Neuron metadata -- # for inner, non-learning neurons that respond to user-defined functions 
-                                                # such as to simulate hunger and energy counters
-        aux_groups = len(self.qa)
-        self.datamatrix_aux = np.zeros([3, aux_groups], dtype="O")
-        # unlike main datamatrix which has columns as number of neurons, in aux datamatrix columns are number of groups
-        # with 3 rows as follows:
-            #0 Type
-            #1 nids - neural IDs
-            #2 Firing Function
+            if aux_groups == 1:
+                    self.datamatrix_aux[0] = "" # placeholder in anticipation of multiple aux types
+                    self.datamatrix_aux[1] = self.Qa
+                    self.datamatrix_aux[2] = "" # placeholder for function
 
-        if aux_groups == 1:
-                self.datamatrix_aux[0] = "" # placeholder in anticipation of multiple aux types
-                self.datamatrix_aux[1] = self.Qa
-                self.datamatrix_aux[2] = "" # placeholder for function
-
-        else:
-            g = 0
-            for qa_group in self.qa:
-                self.datamatrix_aux[0, g] = "" # placeholder in anticipation of multiple aux types
-                self.datamatrix_aux[1, g] = self.Qa[g]
-                self.datamatrix_aux[2, g] = "" # placeholder for function
-                g += 1
-
-        # connection aux neurons to all QZ neurons
-        if qa_conn == "full":
-            for Channel in self.Q:
-                for n in Channel:
-                    self.datamatrix[1, n] = sorted(self.Qa__flat)
-            for Channel in self.Z:
-                for n in Channel:
-                    self.datamatrix[1, n] = sorted(self.Qa__flat)
-        elif qa_conn == "none":
-            pass
+            else:
+                g = 0
+                for qa_group in self.qa:
+                    self.datamatrix_aux[0, g] = "" # placeholder in anticipation of multiple aux types
+                    self.datamatrix_aux[1, g] = self.Qa[g]
+                    self.datamatrix_aux[2, g] = "" # placeholder for function
+                    g += 1
 
 
     ## Neural Connector functions follow
@@ -434,3 +433,15 @@ class Arch(object):
                 self.datamatrix_type = 'rectangular_conn'
         else:
             raise ValueError("invalid connector function")
+
+
+        # connecting Qaux neurons to all QZ neurons
+        if self.qa_conn == "full" and self.qa != [] :
+            for Channel in self.Q:
+                for n in Channel:
+                    self.datamatrix[1, n] += sorted(self.Qa__flat)
+            for Channel in self.Z:
+                for n in Channel:
+                    self.datamatrix[1, n] += sorted(self.Qa__flat)
+        else:
+            pass
