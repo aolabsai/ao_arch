@@ -40,7 +40,10 @@ from .functions import nearest_points, rectangle_points
 
 class Arch(object):
     """Arch constructor class."""
-    def __init__(self, arch_i, arch_z, arch_c=[], connector_function="full_conn",  connector_parameters=(), description=""):
+    def __init__(self, arch_i, arch_z, arch_c=[], 
+                 connector_function="full_conn",  connector_parameters=(),
+                 arch_qa=[], qa_conn="full_conn",
+                 description=""):
         super(Arch, self).__init__()
         self.i = arch_i
         self.q = self.i.copy()
@@ -48,18 +51,26 @@ class Arch(object):
         self.c = [3]+arch_c
         self.connector_function = connector_function
         self.connector_parameters = connector_parameters
+
+        self.qa = arch_qa
+        self.qa_conn = qa_conn
+
         self.description = description
 
         # Neuron Sets
         self.sets = [self.i, self.q, self.z, self.c]
         self.sets_labels = ["I", "Q", "Z", "C"]
+        if self.qa != []: 
+            self.sets += [self.qa]   
+            self.sets_labels += ["Qa"]
         # I - Input neurons: 0 or 1 depending on fixed ENV decoding
         # Q - State or interneurons: 0 or 1 depending on learned lookup tabled comprised of connected neurons
         # Z - Output neurons: also learning binary neurons like Q, except Z actuates Agent in environment
         # C - Control neurons: 0 or 1 depending on designer defined label or trigger like instincts to activate learning
+        # Qa - Auxiliary interneurons: 0 or 1 depending on user-defined function, most simple us is as a step time counter
 
         # Creating nids in Channels in Sets
-        si = 0     # sets, i.e. category of neurons corresponding to major type, i.g. I or Z or C
+        si = 0     # sets, i.e. category of neurons corresponding to major type, i.g. I or Z or C (and Qa if specified)
         neuron_counter = 0
         for s in self.sets:
             
@@ -79,6 +90,10 @@ class Arch(object):
             si += 1
     
         self.n_total = sum(self.i + self.q + self.z + self.c)
+        if self.qa != []:
+            self.n_all = sum(self.i + self.q + self.z + self.c + self.qa)
+        else:
+            self.n_all = self.n_total
 
         self.IQZC = np.concatenate((self.I__flat, self.Q__flat, self.Z__flat, self.C__flat))
         self.IQZ  = np.concatenate((self.I__flat, self.Q__flat, self.Z__flat))
@@ -90,25 +105,50 @@ class Arch(object):
         
         # Defining Neuron metadata -- the connections of neurons (i.e. which neurons constitute each others' lookup tables)
         self.datamatrix = np.zeros([5, self.n_total], dtype="O")
-        # 5 rows, as follows:
+        # As many columns as neurons with 5 rows each specifying as follows:
             #0 Type
             #1 Input Connections
             #2 Neighbor Connections
             #3 C Connections
             #4 Dominant Connection
-            #    ** note; the dominant connection is critical; it is why Q is made in the shape/size of I, so that each Q has a corresponding I as dominant connection (the dominant connection for Z is its own past state [-1]; since if the NSM did something "good / triggered C(s) pleasure neuron(s)" during iconic training, Q will be dominated by I and Z by its past Z (the training becomes; given C at state s, store I(s) and Z(s-1) since Z(s-1) led to the I(s) which triggered C(s)
+            #    ** note: the dominant connection is critical; it is why Q is made in the shape/size of I, so that each Q has a corresponding I as dominant connection (the dominant connection for Z is its own past state [-1]; since if the NSM did something "good / triggered C(s) pleasure neuron(s)" during iconic training, Q will be dominated by I and Z by its past Z (the training becomes; given C at state s, store I(s) and Z(s-1) since Z(s-1) led to the I(s) which triggered C(s)
         
         self.datamatrix[0, self.I__flat] = "Input"
         self.datamatrix[0, self.Q__flat] = "CGA Q"
         self.datamatrix[0, self.Z__flat] = "CGA Z"
         self.datamatrix[0, self.C__flat] = "Control"
 
-        ## Defining C control propertires
+        ## Defining C control properties - these default functions are specified in ao_core
         self.datamatrix[4, self.C[0][0]] = "Default if label"
         self.datamatrix[4, self.C[0][1]] = "C+ pleasure signal"
         self.datamatrix[4, self.C[0][2]] = "C- pain signal"
 
-    ## Connector functions follow
+        if self.qa != []:
+            # Defining Auxiliary Neuron metadata -- # for inner, non-learning neurons that respond to user-defined functions 
+                                                    # such as to simulate hunger and energy counters
+            aux_groups = len(self.qa)
+            self.datamatrix_aux = np.zeros([3, aux_groups], dtype="O")
+            # unlike main datamatrix which has columns as number of neurons, in aux datamatrix columns are number of groups
+            # with 3 rows as follows:
+                #0 Type
+                #1 nids - neural IDs
+                #2 Firing Function
+
+            if aux_groups == 1:
+                    self.datamatrix_aux[0] = "" # placeholder in anticipation of multiple aux types
+                    self.datamatrix_aux[1] = self.Qa
+                    self.datamatrix_aux[2] = "" # placeholder for function
+
+            else:
+                g = 0
+                for qa_group in self.qa:
+                    self.datamatrix_aux[0, g] = "" # placeholder in anticipation of multiple aux types
+                    self.datamatrix_aux[1, g] = self.Qa[g]
+                    self.datamatrix_aux[2, g] = "" # placeholder for function
+                    g += 1
+
+
+    ## Neural Connector functions follow
     #     
     # Note: Neurons are hierarchically grouped as follows: 
     # ----- Set: fixed; major set of neurons, I-input, Q-inter, Z-output, or C-control only
@@ -117,7 +157,7 @@ class Arch(object):
     #
     # Neurons can be connected in a number of ways across groups and channels. Below are some connector_functions for your convenience.
     # 
-    # You can also manually specifiy the connections for your particular arch directly in the datamatrix, or write your own connector_function to do so.
+    # You can also manually specify the connections for your particular arch directly in the datamatrix, or write your own connector_function to do so.
 
         if self.connector_function=="full_conn":
             """Fully connect the neurons-- Q to all I and Q; Z to all Q and Z"""
@@ -393,3 +433,15 @@ class Arch(object):
                 self.datamatrix_type = 'rectangular_conn'
         else:
             raise ValueError("invalid connector function")
+
+
+        # connecting Qaux neurons to all QZ neurons
+        if self.qa_conn == "full_conn" and self.qa != [] :
+            for Channel in self.Q:
+                for n in Channel:
+                    self.datamatrix[1, n] += sorted(self.Qa__flat)
+            for Channel in self.Z:
+                for n in Channel:
+                    self.datamatrix[1, n] += sorted(self.Qa__flat)
+        else:
+            pass

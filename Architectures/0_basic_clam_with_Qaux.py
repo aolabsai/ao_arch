@@ -22,9 +22,13 @@ arch_i = [1, 1, 1]     # 3 neurons, 1 in each of 3 channels, corresponding to Fo
 arch_z = [1]           # corresponding to Open=1/Close=0
 arch_c = [1]           # adding 1 control neuron which we'll define with the instinct control function below
 connector_function = "full_conn"
+connector_parameters=()
+
+arch_qa = [10]
+qa_conn = "full_conn"
 
 # To maintain compatibility with our API, do not change the variable name "Arch" or the constructor class "ar.Arch" in the line below
-Arch = ar.Arch(arch_i, arch_z, arch_c, connector_function, description)
+Arch = ar.Arch(arch_i, arch_z, arch_c, connector_function, connector_parameters, arch_qa, qa_conn, description)
 
 # Adding Instinct Control Neuron
 def c0_instinct_rule(INPUT, Agent):
@@ -36,3 +40,24 @@ def c0_instinct_rule(INPUT, Agent):
 # Saving the function to the Arch so the Agent can access it
 Arch.datamatrix[4, Arch.C[1][0]] = c0_instinct_rule
 
+
+# Adding Aux Action (as a counter)
+def qa0_firing_rule(Agent):
+    if not hasattr(Agent, 'qa0_counter'):
+        Agent.__setattr__("qa0_counter", 0)
+
+    if Agent.qa0_counter < 11:
+        group_response = np.zeros(10)
+        group_response[0 : Agent.qa0_counter] = 1
+        print("Qa0 counter:: "+group_response)
+        Agent.qa0_counter += 1
+    else:
+        Agent.qa0_counter = 1
+        group_response = np.zeros(10)
+        print("Qa0 counter reset at:: " + str(Agent.state))                
+
+    group_meta = np.ones(10, dtype="O")
+    group_meta[:] = "qa0"
+    return group_response, group_meta
+# Saving the function to the Arch so the Agent can access it
+Arch.datamatrix_aux[2] = qa0_firing_rule
