@@ -40,7 +40,8 @@ from .functions import nearest_points, rectangle_points
 
 class Arch(object):
     """Arch constructor class."""
-    def __init__(self, arch_i, arch_z, arch_c=[], connector_function="full_conn",  connector_parameters=(), description=""):
+    def __init__(self, arch_i, arch_z, arch_c=[], connector_function="full_conn",  connector_parameters=(), description="",
+                 api_key=False, kennel_id=False, permissions=False, arch_url=False):
         super(Arch, self).__init__()
         self.i = arch_i
         self.q = self.i.copy()
@@ -49,6 +50,12 @@ class Arch(object):
         self.connector_function = connector_function
         self.connector_parameters = connector_parameters
         self.description = description
+        
+        # For cross-compatibility with ao_python
+        self.api_key = api_key
+        self.kennel_id = kennel_id
+        self.permissions = permissions
+        self.arch_url = arch_url
 
         # Neuron Sets
         self.sets = [self.i, self.q, self.z, self.c]
